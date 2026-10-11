@@ -15,7 +15,7 @@
 
 #define _EMA_ALPHA 0.8    // EMA weight of new sample (range: 0 to 1)
 
-//N=3, 10, 30 variables
+// N=3, 10, 30 variables
 #define MEDIAN_N 10
 
 // global variables
@@ -27,6 +27,9 @@ float dist_median;                  // Median distance
 float raw_buffer[MEDIAN_N];
 int buffer_idx = 0;
 
+// 프로토타입 선언
+float USS_measure(int TRIG, int ECHO);
+
 void setup() {
   // initialize GPIO pins
   pinMode(PIN_LED, OUTPUT);
@@ -36,6 +39,8 @@ void setup() {
 
   // initialize serial port
   Serial.begin(57600);
+
+  last_sampling_time = millis();
 }
 
 // 오름차순 정렬
@@ -107,12 +112,4 @@ float USS_measure(int TRIG, int ECHO)
   digitalWrite(TRIG, LOW);
   
   return pulseIn(ECHO, HIGH, TIMEOUT) * SCALE; // unit: mm
-}void setup() {
-  // put your setup code here, to run once:
-
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
 }
