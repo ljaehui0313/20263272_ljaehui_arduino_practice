@@ -38,7 +38,7 @@ void setup() {
   Serial.begin(57600);
 }
 
-// 배열 정렬 함수
+// 오름차순 정렬
 void sort_array(float arr[], int n) {
   for (int i = 0; i < n - 1; i++) {
     for (int j = 0; j < n - i - 1; j++) {
@@ -51,7 +51,7 @@ void sort_array(float arr[], int n) {
   }
 }
 
-// 중위수 계산 함수
+// Median Calculation Function
 float get_median(float new_val) {
   raw_buffer[buffer_idx] = new_val;
   buffer_idx = (buffer_idx + 1) % MEDIAN_N;
@@ -72,16 +72,16 @@ void loop() {
   if (millis() < last_sampling_time + INTERVAL)
     return;
 
-  // 1. 센서 raw 측정값 읽기
+  // 센서 raw 측정값 읽기
   dist_raw = USS_measure(PIN_TRIG, PIN_ECHO);
 
-  // 2. [직전 유효값 사용 코드 제거] raw 데이터에 중위수 필터 적용
+  // [직전 유효값 사용 코드 제거] raw 데이터에 중위수 필터 적용
   dist_median = get_median(dist_raw);
 
-  // 3. EMA 계산 (raw 데이터 기반)
+  // EMA calculation
   dist_ema = _EMA_ALPHA * dist_raw + (1.0 - _EMA_ALPHA) * dist_ema;
 
-  // 4. 시리얼 플로터 지정 출력 양식 준수
+  // output the read value to the serial port
   Serial.print("Min:");      Serial.print(_DIST_MIN);
   Serial.print(",raw:");     Serial.print(dist_raw);
   Serial.print(",ema:");     Serial.print(dist_ema);
